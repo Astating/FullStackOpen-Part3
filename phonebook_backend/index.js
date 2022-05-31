@@ -56,15 +56,25 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons/", (request, response) => {
   const body = request.body;
   console.log({test: Object.keys(request)})
+  const {name, number } = body
 
-
-  if(!body.name) {
+  if(!name) {
     return response.status(400).json({
-      error: 'content missing'
+      error: 'name is missing'
+    })
+  }
+
+  if (!number) {
+    return response.status(400).json({
+      error: "number is missing"
+    })
+  }
+  if (persons.some((p) => p.name == name)) {
+    return response.status(403).json({
+      error: `${name} already exists`
     })
   }
   const id = Math.round(Math.random()*100_000)
-  const {name, number } = body
   const person = {
     id, name, number
   }
